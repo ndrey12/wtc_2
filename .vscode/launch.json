@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "beta_wtc_bloc",
+            "cwd": "beta_wtc_bloc",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "beta_wtc_bloc (profile mode)",
+            "cwd": "beta_wtc_bloc",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "beta_wtc_bloc (release mode)",
+            "cwd": "beta_wtc_bloc",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
