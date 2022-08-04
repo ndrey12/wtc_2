@@ -11,7 +11,7 @@ class WatcherList extends StatefulWidget {
   State<WatcherList> createState() => _WatcherListState();
 }
 
-class _WatcherListState extends State<WatcherList> {
+class _WatcherListState extends State<WatcherList> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<WatcherListCubit, WatcherListState>(
@@ -73,6 +73,23 @@ class _WatcherListState extends State<WatcherList> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    setState(() {});
   }
 }
 

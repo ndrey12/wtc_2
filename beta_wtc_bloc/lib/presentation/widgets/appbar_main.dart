@@ -8,7 +8,7 @@ class AppBarMain extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: const Text("Watch The Crypto1"),
+      title: const Text("Watch The Crypto"),
       leadingWidth: 100,
       toolbarHeight: 50.0,
       leading: AppBarMainLeading(),
