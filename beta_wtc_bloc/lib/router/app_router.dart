@@ -23,4 +23,12 @@ class AppRouter {
   static void hideDrawerScreen() {
     _key.currentState!.closeDrawer();
   }
+
+  static void showEndDrawerScreen() {
+    _key.currentState!.openEndDrawer();
+  }
+
+  static void hideEndDrawerScreen() {
+    _key.currentState!.closeEndDrawer();
+  }
 }

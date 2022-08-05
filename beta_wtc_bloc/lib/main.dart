@@ -1,3 +1,4 @@
+import 'package:beta_wtc_bloc/logic/cubit/user_data_cubit.dart';
 import 'package:beta_wtc_bloc/logic/cubit/watcher_list_cubit.dart';
 import 'package:beta_wtc_bloc/router/app_router.dart';
 import 'package:beta_wtc_bloc/constants/app_colors.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beta_wtc_bloc/logic/cubit/coin_search_cubit.dart';
 import 'package:beta_wtc_bloc/logic/cubit/coin_price_cubit.dart';
+import 'package:beta_wtc_bloc/logic/cubit/end_drawer_cubit.dart';
+import 'package:beta_wtc_bloc/logic/cubit/alert_cubit.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,6 +27,15 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<CoinPriceCubit>(
           create: (BuildContext context) => CoinPriceCubit(),
+        ),
+        BlocProvider<EndDrawerCubit>(
+          create: (BuildContext context) => EndDrawerCubit(),
+        ),
+        BlocProvider<AlertCubit>(
+          create: (BuildContext context) => AlertCubit(),
+        ),
+        BlocProvider<UserDataCubit>(
+          create: (BuildContext context) => UserDataCubit(),
         ),
       ],
       child: MaterialApp(

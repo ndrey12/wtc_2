@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/appbar_main_leading.dart';
+import 'package:beta_wtc_bloc/presentation/widgets/popupmenu_main.dart';
 
 class AppBarMain extends StatelessWidget with PreferredSizeWidget {
   const AppBarMain({Key? key}) : super(key: key);
@@ -12,6 +13,9 @@ class AppBarMain extends StatelessWidget with PreferredSizeWidget {
       leadingWidth: 100,
       toolbarHeight: 50.0,
       leading: AppBarMainLeading(),
+      actions: const [
+        PopUpMenuMain(),
+      ],
     );
   }
 
