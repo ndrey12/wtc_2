@@ -1,5 +1,7 @@
 import 'package:beta_wtc_bloc/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:beta_wtc_bloc/logic/cubit/user_data_cubit.dart';
 
 class LoginEndDrawer extends StatefulWidget {
   LoginEndDrawer({Key? key}) : super(key: key);
@@ -53,9 +55,11 @@ class _LoginEndDrawerState extends State<LoginEndDrawer> {
                 child: ElevatedButton(
                   child: const Text('Login'),
                   onPressed: () {
-                    AppRouter.hideDrawerScreen();
-                    debugPrint(usernameController.text);
-                    debugPrint(passwordController.text);
+                    BlocProvider.of<UserDataCubit>(context).loginAccount(
+                      usernameController.text,
+                      passwordController.text,
+                    );
+                    AppRouter.hideEndDrawerScreen();
                   },
                 )),
           ],

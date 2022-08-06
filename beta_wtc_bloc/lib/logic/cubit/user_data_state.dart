@@ -9,3 +9,8 @@ class UserDataRegisterState extends UserDataState {
   final RegisterStatus registerStatus;
   UserDataRegisterState({required this.registerStatus});
 }
+
+class UserDataLoginState extends UserDataState {
+  final LoginStatus loginStatus;
+  UserDataLoginState({required this.loginStatus});
+}

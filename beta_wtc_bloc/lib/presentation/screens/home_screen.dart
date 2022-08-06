@@ -22,19 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Builder(builder: (context) {
       return MultiBlocListener(
         listeners: [
-          BlocListener<UserDataCubit, UserDataState>(
-            listener: (context, state) {
-              if (state is UserDataRegisterState) {
-                if (state.registerStatus.status == true) {
-                  BlocProvider.of<AlertCubit>(context)
-                      .showAlert("Info", state.registerStatus.message);
-                } else {
-                  BlocProvider.of<AlertCubit>(context)
-                      .showAlert("Error", state.registerStatus.message);
-                }
-              }
-            },
-          ),
           BlocListener<AlertCubit, AlertState>(
             listener: (context, state) {
               if (state is AlertShow) {
