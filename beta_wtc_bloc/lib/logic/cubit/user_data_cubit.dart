@@ -1,5 +1,8 @@
+import 'package:beta_wtc_bloc/models/change_email_status.dart';
 import 'package:beta_wtc_bloc/models/register_status.dart';
 import 'package:beta_wtc_bloc/models/login_status.dart';
+import 'package:beta_wtc_bloc/models/user_coins_status.dart';
+import 'package:beta_wtc_bloc/models/change_password_status.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:beta_wtc_bloc/models/user_data.dart';
@@ -14,7 +17,6 @@ part 'user_data_state.dart';
 class UserDataCubit extends Cubit<UserDataState> {
   bool isConnected = false;
   late UserData userData;
-  List<String> watcherCoin = ["BTCUSDT"];
   UserDataCubit() : super(UserDataInitial());
 
   Future<void> registerAccount(
@@ -30,10 +32,46 @@ class UserDataCubit extends Cubit<UserDataState> {
       isConnected = true;
       userData = loginStatus.userData;
       //!De incarcat din baza de date coinurile urmarite
+      UserCoinsStatus userCoinsStatus =
+          await UserFunctions.getCoinsForUser(userData.token);
+      emit(UserDataLoginState(
+          loginStatus: loginStatus,
+          coinNames: userCoinsStatus.userCoins,
+          connected: true));
+    } else {
+      emit(UserDataLoginState(
+          loginStatus: loginStatus, coinNames: [], connected: false));
     }
-    emit(UserDataLoginState(loginStatus: loginStatus));
+  }
+
+  void setCoinList(List<String> newCoinList) {
+    if (isConnected == true) {
+      UserFunctions.updateCoinsForUser(userData.token, newCoinList);
+      //!Update in data base
+    }
+  }
+
+  void logOut() {
+    if (isConnected == true) {
+      isConnected = false;
+      emit(UserDataInitial());
+    }
+  }
+
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+    ChangePasswordStatus changePasswordStatus =
+        await UserFunctions.changePassword(
+            userData.token, oldPassword, newPassword);
+    emit(UserDataChangePasswordState(
+        changePasswordStatus: changePasswordStatus));
+  }
+
+  Future<void> changeEmail(String password, String email) async {
+    ChangeEmailStatus changeEmailStatus =
+        await UserFunctions.changeEmail(userData.token, password, email);
+    if (changeEmailStatus.status == true) {
+      userData.email = email;
+    }
+    emit(UserDataChangeEmailState(changeEmailStatus: changeEmailStatus));
   }
 }
-
-//ne jucam cu listenurile dintr-un cubit in altul si aia e, vezi la final explicatie 
-//https://stackoverflow.com/questions/59137180/flutter-listen-bloc-state-from-other-bloc

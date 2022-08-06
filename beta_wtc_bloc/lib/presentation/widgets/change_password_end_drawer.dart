@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beta_wtc_bloc/logic/cubit/user_data_cubit.dart';
 
-class RegisterEndDrawer extends StatefulWidget {
-  RegisterEndDrawer({Key? key}) : super(key: key);
+class ChangePasswordEndDrawer extends StatefulWidget {
+  ChangePasswordEndDrawer({Key? key}) : super(key: key);
 
   @override
-  State<RegisterEndDrawer> createState() => _RegisterEndDrawerState();
+  State<ChangePasswordEndDrawer> createState() =>
+      _ChangePasswordEndDrawerState();
 }
 
-class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
+class _ChangePasswordEndDrawerState extends State<ChangePasswordEndDrawer> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordNewController = TextEditingController();
   TextEditingController passwordRepeatController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -26,26 +27,18 @@ class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10),
                 child: const Text(
-                  'Sign in',
+                  'Change Password',
                   style: TextStyle(fontSize: 20),
                 )),
             Container(
               padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: usernameController,
+              child: TextFormField(
+                obscureText: true,
+                controller: passwordController,
                 decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.lock_open, color: Colors.grey),
                   border: OutlineInputBorder(),
-                  labelText: 'User Name',
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
+                  labelText: 'Current Password',
                 ),
               ),
             ),
@@ -53,11 +46,11 @@ class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextFormField(
                 obscureText: true,
-                controller: passwordController,
+                controller: passwordNewController,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.lock_open, color: Colors.grey),
                   border: OutlineInputBorder(),
-                  labelText: 'Password',
+                  labelText: 'New password',
                 ),
               ),
             ),
@@ -69,7 +62,7 @@ class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.lock_open, color: Colors.grey),
                   border: OutlineInputBorder(),
-                  labelText: 'Repeat password',
+                  labelText: 'Repeat new password',
                 ),
               ),
             ),
@@ -77,9 +70,9 @@ class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                 child: ElevatedButton(
-                  child: const Text('Register'),
+                  child: const Text('Submit'),
                   onPressed: () async {
-                    if (passwordController.text !=
+                    if (passwordNewController.text !=
                         passwordRepeatController.text) {
                       showDialog(
                           context: context,
@@ -95,7 +88,7 @@ class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
                                       })
                                 ],
                               ));
-                    } else if (passwordController.text.length < 8) {
+                    } else if (passwordNewController.text.length < 8) {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
@@ -111,11 +104,10 @@ class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
                                 ],
                               ));
                     } else {
-                      ///de verificat daca parolele coincid
-                      BlocProvider.of<UserDataCubit>(context).registerAccount(
-                          usernameController.text,
-                          passwordController.text,
-                          emailController.text);
+                      BlocProvider.of<UserDataCubit>(context).changePassword(
+                        passwordController.text,
+                        passwordNewController.text,
+                      );
                       AppRouter.hideEndDrawerScreen();
                     }
                   },

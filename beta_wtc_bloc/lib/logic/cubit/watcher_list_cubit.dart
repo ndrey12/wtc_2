@@ -36,4 +36,10 @@ class WatcherListCubit extends Cubit<WatcherListState> {
       resetChangingCoinPos();
     }
   }
+
+  void setCoinNames(List<String> newCoinNames) {
+    resetChangingCoinPos();
+    coinNames = newCoinNames;
+    emit(WatcherListState(coinNames: coinNames));
+  }
 }

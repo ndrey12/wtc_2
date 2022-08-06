@@ -15,9 +15,8 @@ class ChangePasswordItemWidget extends StatelessWidget {
             onTap: () {
               //! de deschis end drawerul dupa ce apelam functia din cubit
               Navigator.pop(context);
-              /*BlocProvider.of<EndDrawerCubit>(context).openLogin();
-              AppRouter.showEndDrawerScreen();*/
-              debugPrint("miau change password");
+              BlocProvider.of<EndDrawerCubit>(context).openChangePassword();
+              AppRouter.showEndDrawerScreen();
             },
             child: Row(children: const [
               Icon(

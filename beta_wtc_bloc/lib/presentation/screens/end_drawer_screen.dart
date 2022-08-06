@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beta_wtc_bloc/logic/cubit/end_drawer_cubit.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/login_end_drawer.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/register_end_drawer.dart';
+import 'package:beta_wtc_bloc/presentation/widgets/change_password_end_drawer.dart';
+import 'package:beta_wtc_bloc/presentation/widgets/change_email_end_drawer.dart';
 
 class EndDrawerScreen extends StatefulWidget {
   EndDrawerScreen({Key? key}) : super(key: key);
@@ -18,13 +20,14 @@ class _EndDrawerScreenState extends State<EndDrawerScreen> {
     return BlocConsumer<EndDrawerCubit, EndDrawerState>(
       builder: (context, state) {
         if (state is EndDrawerLoginState) {
-          debugPrint("miau loginescu");
           return LoginEndDrawer();
         } else if (state is EndDrawerRegisterState) {
-          debugPrint("miau registerescu");
           return RegisterEndDrawer();
+        } else if (state is EndDrawerChangePasswordState) {
+          return ChangePasswordEndDrawer();
+        } else if (state is EndDrawerChangeEmailState) {
+          return ChangeEmailEndDrawer();
         }
-        debugPrint("miau papa");
         AppRouter.hideEndDrawerScreen();
         return const Text("Please refresh");
       },

@@ -17,7 +17,6 @@ class LoginItemWidget extends StatelessWidget {
               Navigator.pop(context);
               BlocProvider.of<EndDrawerCubit>(context).openLogin();
               AppRouter.showEndDrawerScreen();
-              debugPrint("miau login");
             },
             child: Row(children: const [
               Icon(

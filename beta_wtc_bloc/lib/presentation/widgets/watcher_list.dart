@@ -1,5 +1,6 @@
 import 'package:beta_wtc_bloc/logic/cubit/coin_price_cubit.dart';
 import 'package:beta_wtc_bloc/logic/cubit/watcher_list_cubit.dart';
+import 'package:beta_wtc_bloc/logic/cubit/user_data_cubit.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/watcher_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,7 @@ class _WatcherListState extends State<WatcherList> with WidgetsBindingObserver {
       listener: (context, state) {
         //updatam numele coinurilor carora vrem sa le aflam pretul
         BlocProvider.of<CoinPriceCubit>(context).setCoinList(state.coinNames);
+        BlocProvider.of<UserDataCubit>(context).setCoinList(state.coinNames);
       },
       builder: (context, state) {
         List<String> coinWatchersNames = state.coinNames;

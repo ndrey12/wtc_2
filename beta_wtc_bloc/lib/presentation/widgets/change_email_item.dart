@@ -15,9 +15,8 @@ class ChangeEmailItemWidget extends StatelessWidget {
             onTap: () {
               //! de deschis end drawerul dupa ce apelam functia din cubit
               Navigator.pop(context);
-              /*BlocProvider.of<EndDrawerCubit>(context).openLogin();
-              AppRouter.showEndDrawerScreen();*/
-              debugPrint("miau change email");
+              BlocProvider.of<EndDrawerCubit>(context).openChangeEmail();
+              AppRouter.showEndDrawerScreen();
             },
             child: Row(children: const [
               Icon(

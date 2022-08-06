@@ -1,4 +1,6 @@
 import 'package:beta_wtc_bloc/constants/app_colors.dart';
+import 'package:beta_wtc_bloc/logic/cubit/coin_price_cubit.dart';
+import 'package:beta_wtc_bloc/logic/cubit/watcher_list_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/login_item.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/register_item.dart';
@@ -29,11 +31,32 @@ class PopUpMenuMain extends StatelessWidget {
           if (state.loginStatus.status == false) {
             BlocProvider.of<AlertCubit>(context)
                 .showAlert("Error", state.loginStatus.message);
+          } else {
+            BlocProvider.of<WatcherListCubit>(context)
+                .setCoinNames(state.coinNames);
+            BlocProvider.of<CoinPriceCubit>(context)
+                .setCoinList(state.coinNames);
+          }
+        } else if (state is UserDataChangePasswordState) {
+          if (state.changePasswordStatus.status == false) {
+            BlocProvider.of<AlertCubit>(context)
+                .showAlert("Error", state.changePasswordStatus.message);
+          } else {
+            BlocProvider.of<AlertCubit>(context)
+                .showAlert("Info", state.changePasswordStatus.message);
+          }
+        } else if (state is UserDataChangeEmailState) {
+          if (state.changeEmailStatus.status == false) {
+            BlocProvider.of<AlertCubit>(context)
+                .showAlert("Error", state.changeEmailStatus.message);
+          } else {
+            BlocProvider.of<AlertCubit>(context)
+                .showAlert("Info", state.changeEmailStatus.message);
           }
         }
       },
       builder: (context, state) {
-        if (state is UserDataLoginState && state.loginStatus.status == true) {
+        if (state.isConnected == true) {
           return PopupMenuButton(
             color: AppColors.greyLight,
             itemBuilder: (context) => const [

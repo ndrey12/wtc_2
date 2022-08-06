@@ -13,4 +13,12 @@ class EndDrawerCubit extends Cubit<EndDrawerState> {
   void openRegister() {
     emit(EndDrawerRegisterState());
   }
+
+  void openChangePassword() {
+    emit(EndDrawerChangePasswordState());
+  }
+
+  void openChangeEmail() {
+    emit(EndDrawerChangeEmailState());
+  }
 }

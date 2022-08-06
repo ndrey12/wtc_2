@@ -8,3 +8,7 @@ class EndDrawerInitial extends EndDrawerState {}
 class EndDrawerLoginState extends EndDrawerState {}
 
 class EndDrawerRegisterState extends EndDrawerState {}
+
+class EndDrawerChangePasswordState extends EndDrawerState {}
+
+class EndDrawerChangeEmailState extends EndDrawerState {}
