@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:beta_wtc_bloc/presentation/screens/home_screen.dart';
+import 'package:beta_wtc_bloc/presentation/screens/forgot_password_screen.dart';
 
 class AppRouter {
   static final GlobalKey<ScaffoldState> _key = GlobalKey();
+  static final GlobalKey<ScaffoldState> _forgotPasswordKey = GlobalKey();
   Route onGenerateRoute(RouteSettings settings) {
-    switch (settings.name) {
+    final settingsUri = Uri.parse(settings.name.toString());
+    final param = settingsUri.queryParameters['id'].toString();
+    final path = settingsUri.path;
+    print(param);
+    print(path);
+    switch (path.toString()) {
       case '/':
         return MaterialPageRoute(builder: (_) => HomeScreen(scaffoldKey: _key));
+      case '/forgot-password':
+        return MaterialPageRoute(
+            builder: (_) =>
+                ForgotPasswordScreen(scaffoldKey: _forgotPasswordKey));
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
