@@ -9,12 +9,13 @@ const fs = require('fs');
 const options = {
     key: fs.readFileSync('key.pem', 'utf8'),
     cert: fs.readFileSync('cert.pem', 'utf8')
-  };
+};
 var Promise = require('bluebird');
 
 let Secrets = require('./secrets.js');
 let Database = require('./database.js');
 let SendMail = require('./send_mail.js');
+const { create } = require("domain");
 const port = 5052;
 const app = express();
 
@@ -47,7 +48,7 @@ ApiRegister = async (req, res) => {
                 let encryptedPassword = bcrypt.hashSync(password, 10);
                 let addUserStatus = await Database.addUser(username, email, encryptedPassword);
                 if (addUserStatus == true)
-                    
+
                     easyStatusText(res, 200, "Account created succesfully.");
                 else
                     easyStatusText(res, 409, "Error while inserting new user into database.");
@@ -268,6 +269,26 @@ ApiUpdateCoinForUser = async (req, res) => {
         });
     }
 }
+ApiEmitForgotPasswordMail = async (req, res) => {
+    let userJsonData = req.body;
+    let email = userJsonData.email;
+    if (email == null)
+        easyStatusText(res, 400, 'Some data are missing! (token/coins_string).');
+    else {
+        await Database.removeExpiredForgotPasswordTokens();
+        let mailExists = await Database.checkIfUserExistsByEmail(email);
+        if (mailExists == true) {
+            let userId = await Database.getUserIdFromEmail(email);
+            let currentTimeStamp = Math.floor(Date.now() / 1000);
+            const forgotPasswordToken = jwt.sign({ userEmail: email, time: currentTimeStamp }, Secrets.jwt_secret);
+            let createNewFPToken = await Database.addForgotPasswordToken(userId, currentTimeStamp, forgotPasswordToken);
+            if (createNewFPToken == true) {
+                let emailContent = "To recover your password you have 10min to click on this link: https://watchthecrypto.com/#/forgot-password?id=" + forgotPasswordToken.toString();
+                SendMail.mailUser(email, "Recover Password", emailContent);
+            }
+        }
+    }
+}
 //routes
 app.post('/api/register', (req, res) => {
     ApiRegister(req, res);
@@ -297,8 +318,10 @@ app.post('/api/remove-user', (req, res) => {
 app.post('/api/update-coins-for-user', (req, res) => {
     ApiUpdateCoinForUser(req, res);
 });
+app.post('/api/emit-forgot-password-mail', (req, res) => {
+    ApiEmitForgotPasswordMail(req, res);
+});
 var server = https.createServer(options, app);
 server.listen(port, () => {
     console.log("[Info] WTC server starting on port : " + port)
-  });
-  
+});

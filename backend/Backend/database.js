@@ -346,6 +346,76 @@ async function query_removeUser(userId) {
         if (conn) return conn.end();
     }
 }
+
+async function query_removeExpiredForgotPasswordTokens() {
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            let maxTimeStamp = Math.floor(Date.now() / 1000) - 10 * 60;
+            conn = await pool.getConnection();
+            let mysql_query = 'DELETE FROM `forgot_password` WHERE `emited_time` <= ' + pool.escape(maxTimeStamp);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            return resolve(true);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_checkIfForgotPasswordTokenExists(forgotPasswordToken) {
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            let maxTimeStamp = Math.floor(Date.now() / 1000) - 10 * 60;
+            conn = await pool.getConnection();
+            let mysql_query = 'SELECT COUNT(*) as tokenCount FROM `forgot_password` WHERE `token` =' + pool.escape(forgotPasswordToken);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            var result = Object.assign({}, rows[0]);
+            if (result["tokenCount"] >= 1) return resolve(true);
+            return resolve(false);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_addForgotPasswordToken(userId, currentTimeStamp, forgotPasswordToken) {
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'INSERT INTO `forgot_password`(`user_id`, `emited_time`, `token`) VALUES (' + pool.escape(userId) + ', ' + pool.escape(currentTimeStamp) + ', ' + pool.escape(forgotPasswordToken) + ')';
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            return resolve(true);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_getUserIdFromEmail(email) {
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'SELECT `id` FROM `users` WHERE `email` =' + pool.escape(email);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            var result = Object.assign({}, rows[0]);
+            return resolve(result["id"] );
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
 module.exports.checkIfUserExistsByUsername = query_checkIfUserExistsByUsername;
 module.exports.checkIfUserExistsByEmail = query_checkIfUserExistsByEmail;
 module.exports.checkIfUserExistsById = query_checkIfUserExistsById;
@@ -362,3 +432,7 @@ module.exports.getUserNameForUserId = query_getUserNameForUserId;
 module.exports.getEmailForUserId = query_getEmailForUserId;
 module.exports.updateCoinsForUser = query_updateCoinsForUser;
 module.exports.addUser = query_addUser;
+module.exports.removeExpiredForgotPasswordTokens = query_removeExpiredForgotPasswordTokens;
+module.exports.checkIfForgotPasswordTokenExists = query_checkIfForgotPasswordTokenExists;
+module.exports.addForgotPasswordToken = query_addForgotPasswordToken;
+module.exports.getUserIdFromEmail = query_getUserIdFromEmail;
