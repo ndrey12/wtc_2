@@ -14,6 +14,7 @@ var Promise = require('bluebird');
 
 let Secrets = require('./secrets.js');
 let Database = require('./database.js');
+let SendMail = require('./send_mail.js');
 const port = 5052;
 const app = express();
 
