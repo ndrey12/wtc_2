@@ -7,9 +7,8 @@ class AppRouter {
   static final GlobalKey<ScaffoldState> _forgotPasswordKey = GlobalKey();
   Route onGenerateRoute(RouteSettings settings) {
     final settingsUri = Uri.parse(settings.name.toString());
-    final param = settingsUri.queryParameters['id'].toString();
+    final param_token = settingsUri.queryParameters['token'].toString();
     final path = settingsUri.path;
-    print(param);
     print(path);
     switch (path.toString()) {
       case '/':

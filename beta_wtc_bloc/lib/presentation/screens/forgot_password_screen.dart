@@ -1,10 +1,6 @@
-import 'package:beta_wtc_bloc/logic/cubit/user_data_cubit.dart';
-import 'package:beta_wtc_bloc/presentation/widgets/watcher_list.dart';
-import 'package:beta_wtc_bloc/router/app_router.dart';
+import 'package:beta_wtc_bloc/constants/app_colors.dart';
+import 'package:beta_wtc_bloc/presentation/widgets/forgot_password_body.dart';
 import 'package:flutter/material.dart';
-import 'package:beta_wtc_bloc/presentation/widgets/appbar_main.dart';
-import 'package:beta_wtc_bloc/presentation/screens/drawer_screen.dart';
-import 'package:beta_wtc_bloc/presentation/screens/end_drawer_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beta_wtc_bloc/logic/cubit/alert_cubit.dart';
 
@@ -45,13 +41,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         ],
         child: Scaffold(
+          backgroundColor: AppColors.greyLight,
           key: widget.scaffoldKey,
-          appBar: const AppBarMain(),
-          endDrawerEnableOpenDragGesture: false,
-          drawerEnableOpenDragGesture: false,
-          drawer: DrawerScreen(),
-          endDrawer: EndDrawerScreen(),
-          body: Text(para1.toString()),
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: const Text("Watch The Crypto"),
+          ),
+          body: ForgotPasswordBody(),
         ),
       );
     });

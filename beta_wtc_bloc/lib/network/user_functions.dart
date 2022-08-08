@@ -212,4 +212,37 @@ class UserFunctions {
     }
     return ChangeEmailStatus(status: false, message: "Unknown Error");
   }
+
+  static Future<ChangePasswordStatus> forgotPassword(
+      String token, String newPassword) async {
+    var salt =
+        '55d22cd3f15b89648eef873c0d7b0224ba933148b96738a2f1718a957f884b39';
+    var saltedNewPassword = salt + newPassword;
+    var bytes = utf8.encode(saltedNewPassword);
+    var encryptedNewPassword = sha256.convert(bytes);
+
+    try {
+      var getCoinsApi =
+          Uri.parse("https://watchthecrypto.com:5052/api/forgot-password");
+      var response = await http.post(
+        getCoinsApi,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'new_password': encryptedNewPassword.toString(),
+          'token': token,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return ChangePasswordStatus(
+            status: true, message: "Password have been changed.");
+      } else {
+        return ChangePasswordStatus(status: false, message: response.body);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return ChangePasswordStatus(status: false, message: "Unknown Error!");
+  }
 }
