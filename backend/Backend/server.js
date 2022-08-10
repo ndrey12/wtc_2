@@ -278,15 +278,69 @@ ApiEmitForgotPasswordMail = async (req, res) => {
         await Database.removeExpiredForgotPasswordTokens();
         let mailExists = await Database.checkIfUserExistsByEmail(email);
         if (mailExists == true) {
-            let userId = await Database.getUserIdFromEmail(email);
-            let currentTimeStamp = Math.floor(Date.now() / 1000);
-            const forgotPasswordToken = jwt.sign({ userEmail: email, time: currentTimeStamp }, Secrets.jwt_secret);
-            let createNewFPToken = await Database.addForgotPasswordToken(userId, currentTimeStamp, forgotPasswordToken);
-            if (createNewFPToken == true) {
-                let emailContent = "To recover your password you have 10min to click on this link: https://watchthecrypto.com/#/forgot-password?id=" + forgotPasswordToken.toString();
-                SendMail.mailUser(email, "Recover Password", emailContent);
+            let userId = await Database.getUserIdFromEmail(email);//! de verificat daca are deja mail trimis
+            let emailAlreadyEmited = await Database.checkIfEmailAlreadyEmited(userId);
+            if (emailAlreadyEmited == true) {
+                easyStatusText(res, 400, 'Email already emited.');
+            } else {
+                let currentTimeStamp = Math.floor(Date.now() / 1000);
+                const forgotPasswordToken = jwt.sign({ email: email, time: currentTimeStamp }, Secrets.jwt_secret);
+                let createNewFPToken = await Database.addForgotPasswordToken(userId, currentTimeStamp, forgotPasswordToken);
+                if (createNewFPToken == true) {
+                    let emailContent = "To recover your password you have 10min to click on this link: https://watchthecrypto.com/#/forgot-password?id=" + forgotPasswordToken.toString();
+                    SendMail.mailUser(email, "Recover Password", emailContent);
+                    easyStatusText(res, 200, "Mail sent");
+                }
+                else {
+                    easyStatusText(res, 400, 'Mail already sent!');
+                }
             }
+        } else {
+            easyStatusText(res, 400, 'User doesn\'t exist');
         }
+    }
+}
+ApiForgotPassword = async (req, res) => {
+    let userJsonData = req.body;
+    let forgotPasswordToken = userJsonData.token;
+    let newPassword = userJsonData.new_password;
+    if (forgotPasswordToken == null || newPassword == null)
+        easyStatusText(res, 400, 'Some data are missing! (token/new password).');
+    else {
+        await Database.removeExpiredForgotPasswordTokens();
+        //verificam jwt si luam id ul
+        jwt.verify(forgotPasswordToken, Secrets.jwt_secret, async function (err, decoded) {
+            if (err)
+                easyStatusText(res, 400, 'Token not valid, please try again');
+            else {
+                let userEmail = decoded.email;
+                let emailExists = await Database.checkIfUserExistsByEmail(userEmail);
+                if (emailExists == false) {
+                    easyStatusText(res, 400, 'Account does not exist.');
+                } else {
+                    let userId = await Database.getUserIdFromEmail(userEmail);
+                    let forgotTokenValid = await Database.checkIfFPTokenIsValid(userId, forgotPasswordToken);
+                    if (forgotTokenValid == false) {
+                        easyStatusText(res, 400, 'Token expired.');
+                    } else {
+                        let encryptedNewPassword = bcrypt.hashSync(newPassword, 10);
+                        let changePasswordStatus = await Database.changePasswordForUserId(userId, encryptedNewPassword);
+                        if (changePasswordStatus == false) {
+                            easyStatusText(res, 400, 'Database error.');
+                        } else {
+                            let removeFPTokenStatus = await Database.removeFPToken(userId);
+                            if (removeFPTokenStatus == true) {
+                                easyStatusText(res, 200, 'Succes');
+                            } else {
+                                easyStatusText(res, 400, 'Database error.');
+                            }
+                        }
+                    }
+                }
+                
+            }
+        });
+
     }
 }
 //routes
@@ -320,6 +374,9 @@ app.post('/api/update-coins-for-user', (req, res) => {
 });
 app.post('/api/emit-forgot-password-mail', (req, res) => {
     ApiEmitForgotPasswordMail(req, res);
+});
+app.post('/api/forgot-password', (req, res) => {
+    ApiForgotPassword(req, res);
 });
 var server = https.createServer(options, app);
 server.listen(port, () => {

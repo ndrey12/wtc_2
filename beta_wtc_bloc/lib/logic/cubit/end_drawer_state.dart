@@ -12,3 +12,5 @@ class EndDrawerRegisterState extends EndDrawerState {}
 class EndDrawerChangePasswordState extends EndDrawerState {}
 
 class EndDrawerChangeEmailState extends EndDrawerState {}
+
+class EndDrawerForgotPasswordState extends EndDrawerState {}

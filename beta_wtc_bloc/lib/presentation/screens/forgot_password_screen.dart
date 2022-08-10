@@ -3,10 +3,13 @@ import 'package:beta_wtc_bloc/presentation/widgets/forgot_password_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beta_wtc_bloc/logic/cubit/alert_cubit.dart';
+import 'package:beta_wtc_bloc/logic/cubit/forgot_password_cubit.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const ForgotPasswordScreen({Key? key, required this.scaffoldKey})
+  final String tokenParam;
+  const ForgotPasswordScreen(
+      {Key? key, required this.scaffoldKey, required this.tokenParam})
       : super(key: key);
 
   @override
@@ -16,8 +19,9 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<ForgotPasswordCubit>(context)
+        .setParamToken(widget.tokenParam);
     return Builder(builder: (context) {
-      String? para1 = Uri.base.queryParameters["para1"];
       return MultiBlocListener(
         listeners: [
           BlocListener<AlertCubit, AlertState>(

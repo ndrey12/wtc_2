@@ -7,7 +7,7 @@ class AppRouter {
   static final GlobalKey<ScaffoldState> _forgotPasswordKey = GlobalKey();
   Route onGenerateRoute(RouteSettings settings) {
     final settingsUri = Uri.parse(settings.name.toString());
-    final param_token = settingsUri.queryParameters['token'].toString();
+    final param_token = settingsUri.queryParameters['id'].toString();
     final path = settingsUri.path;
     print(path);
     switch (path.toString()) {
@@ -15,8 +15,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => HomeScreen(scaffoldKey: _key));
       case '/forgot-password':
         return MaterialPageRoute(
-            builder: (_) =>
-                ForgotPasswordScreen(scaffoldKey: _forgotPasswordKey));
+            builder: (_) => ForgotPasswordScreen(
+                scaffoldKey: _forgotPasswordKey, tokenParam: param_token));
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

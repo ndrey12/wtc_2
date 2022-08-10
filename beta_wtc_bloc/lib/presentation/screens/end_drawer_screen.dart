@@ -6,6 +6,7 @@ import 'package:beta_wtc_bloc/presentation/widgets/login_end_drawer.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/register_end_drawer.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/change_password_end_drawer.dart';
 import 'package:beta_wtc_bloc/presentation/widgets/change_email_end_drawer.dart';
+import 'package:beta_wtc_bloc/presentation/widgets/forgot_password_end_drawer.dart';
 
 class EndDrawerScreen extends StatefulWidget {
   EndDrawerScreen({Key? key}) : super(key: key);
@@ -27,6 +28,8 @@ class _EndDrawerScreenState extends State<EndDrawerScreen> {
           return ChangePasswordEndDrawer();
         } else if (state is EndDrawerChangeEmailState) {
           return ChangeEmailEndDrawer();
+        } else if (state is EndDrawerForgotPasswordState) {
+          return ForgotPasswordEndDrawer();
         }
         AppRouter.hideEndDrawerScreen();
         return const Text("Please refresh");

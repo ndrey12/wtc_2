@@ -245,4 +245,22 @@ class UserFunctions {
     }
     return ChangePasswordStatus(status: false, message: "Unknown Error!");
   }
+
+  static Future<void> sendForgotPasswordMail(String email) async {
+    try {
+      var getCoinsApi = Uri.parse(
+          "https://watchthecrypto.com:5052/api/emit-forgot-password-mail");
+      await http.post(
+        getCoinsApi,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+        }),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }

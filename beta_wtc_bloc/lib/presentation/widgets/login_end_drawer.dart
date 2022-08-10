@@ -2,9 +2,10 @@ import 'package:beta_wtc_bloc/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:beta_wtc_bloc/logic/cubit/user_data_cubit.dart';
+import 'package:beta_wtc_bloc/logic/cubit/end_drawer_cubit.dart';
 
 class LoginEndDrawer extends StatefulWidget {
-  LoginEndDrawer({Key? key}) : super(key: key);
+  const LoginEndDrawer({Key? key}) : super(key: key);
 
   @override
   State<LoginEndDrawer> createState() => _LoginEndDrawerState();
@@ -61,6 +62,16 @@ class _LoginEndDrawerState extends State<LoginEndDrawer> {
                     );
                     AppRouter.hideEndDrawerScreen();
                   },
+                )),
+            Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<EndDrawerCubit>(context)
+                        .openForgotPassword();
+                  },
+                  child: Text("Forgot Password?"),
                 )),
           ],
         ),

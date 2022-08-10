@@ -416,6 +416,58 @@ async function query_getUserIdFromEmail(email) {
         if (conn) return conn.end();
     }
 }
+async function query_checkIfEmailAlreadyEmited(userId) {
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'SELECT COUNT(*) as countEmited FROM `forgot_password` WHERE `user_id` =' + pool.escape(userId);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            var result = Object.assign({}, rows[0]);
+            if (result["countEmited"] >= 1) return resolve(true);
+            return resolve(false);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_checkIfFPTokenIsValid(userId, forgotPasswordToken) {
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'SELECT COUNT(*) as countEmited FROM `forgot_password` WHERE `user_id` =' + pool.escape(userId) + ' AND `token` = ' + pool.escape(forgotPasswordToken);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            var result = Object.assign({}, rows[0]);
+            if (result["countEmited"] >= 1) return resolve(true);
+            return resolve(false);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_removeFPToken(userId) {
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'DELETE FROM `forgot_password` WHERE `user_id` =' + pool.escape(userId);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            return resolve(true);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
 module.exports.checkIfUserExistsByUsername = query_checkIfUserExistsByUsername;
 module.exports.checkIfUserExistsByEmail = query_checkIfUserExistsByEmail;
 module.exports.checkIfUserExistsById = query_checkIfUserExistsById;
@@ -436,3 +488,6 @@ module.exports.removeExpiredForgotPasswordTokens = query_removeExpiredForgotPass
 module.exports.checkIfForgotPasswordTokenExists = query_checkIfForgotPasswordTokenExists;
 module.exports.addForgotPasswordToken = query_addForgotPasswordToken;
 module.exports.getUserIdFromEmail = query_getUserIdFromEmail;
+module.exports.checkIfEmailAlreadyEmited = query_checkIfEmailAlreadyEmited;
+module.exports.checkIfFPTokenIsValid = query_checkIfFPTokenIsValid;
+module.exports.removeFPToken = query_removeFPToken;

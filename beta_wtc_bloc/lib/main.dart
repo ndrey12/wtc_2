@@ -1,5 +1,6 @@
 import 'package:beta_wtc_bloc/logic/cubit/user_data_cubit.dart';
 import 'package:beta_wtc_bloc/logic/cubit/watcher_list_cubit.dart';
+import 'package:beta_wtc_bloc/logic/cubit/forgot_password_cubit.dart';
 import 'package:beta_wtc_bloc/router/app_router.dart';
 import 'package:beta_wtc_bloc/constants/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<UserDataCubit>(
           create: (BuildContext context) => UserDataCubit(),
+        ),
+        BlocProvider<ForgotPasswordCubit>(
+          create: (BuildContext context) => ForgotPasswordCubit(),
         ),
       ],
       child: MaterialApp(
