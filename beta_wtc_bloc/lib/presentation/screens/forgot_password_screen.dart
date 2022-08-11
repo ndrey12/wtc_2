@@ -43,12 +43,25 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               }
             },
           ),
+          BlocListener<ForgotPasswordCubit, ForgotPasswordState>(
+            listener: (context, state) {
+              if (state is ForgotPasswordRes) {
+                if (state.changePasswordStatus.status == true) {
+                  BlocProvider.of<AlertCubit>(context)
+                      .showAlert("Info!", state.changePasswordStatus.message);
+                } else {
+                  BlocProvider.of<AlertCubit>(context)
+                      .showAlert("Error!", state.changePasswordStatus.message);
+                }
+              }
+            },
+          ),
         ],
         child: Scaffold(
           backgroundColor: AppColors.greyLight,
           key: widget.scaffoldKey,
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            //automaticallyImplyLeading: false,
             title: const Text("Watch The Crypto"),
           ),
           body: ForgotPasswordBody(),

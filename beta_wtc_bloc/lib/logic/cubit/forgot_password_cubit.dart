@@ -20,9 +20,10 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     emit(ForgotPasswordCantSubmit());
     ChangePasswordStatus changePasswordStatus =
         await UserFunctions.forgotPassword(paramToken, newPassword);
+    emit(ForgotPasswordRes(changePasswordStatus: changePasswordStatus));
   }
 
-  void sendForgotPasswordMail(String userEmail) {
+  Future<void> sendForgotPasswordMail(String userEmail) async {
     UserFunctions.sendForgotPasswordMail(userEmail);
   }
 }

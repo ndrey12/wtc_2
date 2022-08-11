@@ -1,3 +1,4 @@
+import 'package:beta_wtc_bloc/logic/cubit/alert_cubit.dart';
 import 'package:beta_wtc_bloc/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,12 @@ class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordRepeatController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  bool isEmail(email) {
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -81,37 +88,15 @@ class _RegisterEndDrawerState extends State<RegisterEndDrawer> {
                   onPressed: () async {
                     if (passwordController.text !=
                         passwordRepeatController.text) {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                title: const Text('Error'),
-                                content:
-                                    const Text('Passwords are not the same'),
-                                actions: <Widget>[
-                                  IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      })
-                                ],
-                              ));
+                      BlocProvider.of<AlertCubit>(context)
+                          .showAlert("Error!", "Passwords are not the same.");
                     } else if (passwordController.text.length < 8) {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                title: const Text('Error'),
-                                content: const Text(
-                                    'Password must have at least 8 characters.'),
-                                actions: <Widget>[
-                                  IconButton(
-                                      icon: new Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      })
-                                ],
-                              ));
+                      BlocProvider.of<AlertCubit>(context).showAlert("Error!",
+                          "Password must have at least 8 characters.");
+                    } else if (isEmail(emailController.text) == false) {
+                      BlocProvider.of<AlertCubit>(context)
+                          .showAlert("Error!", "Please enter a valid email!");
                     } else {
-                      ///de verificat daca parolele coincid
                       BlocProvider.of<UserDataCubit>(context).registerAccount(
                           usernameController.text,
                           passwordController.text,

@@ -18,7 +18,11 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody> {
     TextEditingController passwordNewController = TextEditingController();
     TextEditingController passwordRepeatController = TextEditingController();
     return BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is ForgotPasswordRes) {
+          //! Trimitem alerta primita din server side
+        }
+      },
       builder: (context, state) {
         return Center(
           child: Container(
@@ -115,13 +119,13 @@ class _ForgotPasswordBodyState extends State<ForgotPasswordBody> {
                                       ],
                                     ));
                           } else {
-                            if (state is ForgotPasswordCantSubmit) {
+                            if (state is ForgotPasswordCanSubmit) {
+                              BlocProvider.of<ForgotPasswordCubit>(context)
+                                  .changePassword(passwordNewController.text);
+                            } else {
                               BlocProvider.of<AlertCubit>(context).showAlert(
                                   "Error!",
                                   "You cannot submit right now, please try again later.");
-                            } else if (state is ForgotPasswordCanSubmit) {
-                              BlocProvider.of<ForgotPasswordCubit>(context)
-                                  .changePassword(passwordNewController.text);
                             }
                           }
                         },
