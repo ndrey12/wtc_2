@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:beta_wtc_bloc/constants/app_colors.dart';
 import 'package:beta_wtc_bloc/logic/cubit/watcher_list_cubit.dart';
 import 'package:beta_wtc_bloc/router/app_router.dart';
 import 'package:flutter/material.dart';
@@ -22,26 +23,31 @@ class AppBarWathcerLeading extends StatelessWidget {
                 .setChangingCoinPos(coinId);
             AppRouter.showDrawerScreen();
           },
-          child: Stack(
+          child: Row(
             children: [
-              AutoSizeText(
-                coinName,
-                style: TextStyle(
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = 3
-                    ..color = const Color(0xFF222222),
-                ),
-                maxLines: 1,
+              Stack(
+                children: [
+                  AutoSizeText(
+                    coinName,
+                    style: TextStyle(
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 3
+                        ..color = const Color(0xFF222222),
+                    ),
+                    maxLines: 1,
+                  ),
+                  // Solid text as fill.
+                  AutoSizeText(
+                    coinName,
+                    style: const TextStyle(
+                      color: Color(0xFF847968),
+                    ),
+                    maxLines: 1,
+                  ),
+                ],
               ),
-              // Solid text as fill.
-              AutoSizeText(
-                coinName,
-                style: const TextStyle(
-                  color: Color(0xFF847968),
-                ),
-                maxLines: 1,
-              ),
+              Icon(Icons.edit, color: AppColors.brownDark),
             ],
           ),
         );

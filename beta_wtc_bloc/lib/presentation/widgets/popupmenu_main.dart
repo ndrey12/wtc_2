@@ -58,6 +58,7 @@ class PopUpMenuMain extends StatelessWidget {
       builder: (context, state) {
         if (state.isConnected == true) {
           return PopupMenuButton(
+            icon: const Icon(Icons.menu),
             color: AppColors.greyLight,
             itemBuilder: (context) => const [
               PopupMenuItem(child: LogoutItemWidget()),
@@ -67,6 +68,7 @@ class PopUpMenuMain extends StatelessWidget {
           );
         }
         return PopupMenuButton(
+          icon: const Icon(Icons.menu),
           color: AppColors.greyLight,
           itemBuilder: (context) => const [
             PopupMenuItem(child: LoginItemWidget()),
