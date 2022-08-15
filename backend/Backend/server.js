@@ -77,6 +77,7 @@ ApiLogin = async (req, res) => {
                     const user_token = jwt.sign({ userid: isPasswordCorrect }, Secrets.jwt_secret);
                     let userEmail = await Database.getEmailForUserId(isPasswordCorrect);
                     let userName = await Database.getUserNameForUserId(isPasswordCorrect);
+                    SendMail.mailUser(userEmail, "Login", "A new connection from " + req.socket.remoteAddress.replace(/^.*:/, '') + " IP Address. If it's not you please consider to change your password.")
                     var rawJson = {
                         token: user_token,
                         email: userEmail,
