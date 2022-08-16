@@ -399,6 +399,7 @@ async function query_addForgotPasswordToken(userId, currentTimeStamp, forgotPass
         if (conn) return conn.end();
     }
 }
+
 async function query_getUserIdFromEmail(email) {
     let conn;
     try {
@@ -468,6 +469,23 @@ async function query_removeFPToken(userId) {
         if (conn) return conn.end();
     }
 }
+async function query_removeExpiredRegisterTokens() {
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            let maxTimeStamp = Math.floor(Date.now() / 1000) - 10 * 60;
+            conn = await pool.getConnection();
+            let mysql_query = 'DELETE FROM `register` WHERE `timestamp` <= ' + pool.escape(maxTimeStamp);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            return resolve(true);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
 module.exports.checkIfUserExistsByUsername = query_checkIfUserExistsByUsername;
 module.exports.checkIfUserExistsByEmail = query_checkIfUserExistsByEmail;
 module.exports.checkIfUserExistsById = query_checkIfUserExistsById;
@@ -491,3 +509,4 @@ module.exports.getUserIdFromEmail = query_getUserIdFromEmail;
 module.exports.checkIfEmailAlreadyEmited = query_checkIfEmailAlreadyEmited;
 module.exports.checkIfFPTokenIsValid = query_checkIfFPTokenIsValid;
 module.exports.removeFPToken = query_removeFPToken;
+module.exports.removeExpiredRegisterTokens = query_removeExpiredRegisterTokens;
