@@ -45,13 +45,28 @@ ApiRegister = async (req, res) => {
             if (emailExists == true)
                 easyStatusText(res, 409, 'A user with this email already exists.');
             else {
-                let encryptedPassword = bcrypt.hashSync(password, 10);
-                let addUserStatus = await Database.addUser(username, email, encryptedPassword);
-                if (addUserStatus == true)
-
-                    easyStatusText(res, 200, "Account created succesfully.");
-                else
-                    easyStatusText(res, 409, "Error while inserting new user into database.");
+                ///verificam daca exista deja un mail trimis
+                let registerWaitingValidate_username = await Database.checkIfRegisterUsernameExists(username);
+                if (registerWaitingValidate_username == true)
+                    easyStatusText(res, 409, 'A user with this username is already reserved. Try again in 10 minutes.');
+                else {
+                    let registerWaitingValidate_email = await Database.checkIfRegisterEmailExists(email);
+                    if (registerWaitingValidate_email == true)
+                        easyStatusText(res, 409, 'A user with this email is already reserved. Try again in 10 minutes.');
+                    else {
+                        let encryptedPassword = bcrypt.hashSync(password, 10);
+                        const token = jwt.sign({ username: username, email: email }, Secrets.jwt_secret);
+                        let currentTimeStamp = Math.floor(Date.now() / 1000);
+                        let addRegisterStatus = await Database.addRegister(username, email, encryptedPassword, token, currentTimeStamp);
+                        if (addRegisterStatus == true) {
+                            let emailContent = "To validate your account you have 10min to click on this link: https://watchthecrypto.com/#/validate-account?id=" + token.toString();
+                            SendMail.mailUser(email, "Recover Password", emailContent);
+                            easyStatusText(res, 200, "We have sent to you and email to validate your account.");
+                        }
+                        else
+                            easyStatusText(res, 409, "Error while inserting new user into database.");
+                    }
+                }
             }
         }
     }
@@ -338,15 +353,41 @@ ApiForgotPassword = async (req, res) => {
                         }
                     }
                 }
-                
+
             }
         });
 
     }
 }
+ApiValidateAccount = async (req, res) => {
+    let token = userJsonData.token;
+    if (token == null)
+        easyStatusText(res, 400, 'Some data are missing!');
+    else {
+        jwt.verify(token, Secrets.jwt_secret, async function (err, decoded) {
+            if (err)
+                easyStatusText(res, 400, 'Please try again.');
+            else {
+                let username = decoded.username;
+                let email = decoded.email;
+                let dataMatch = await Database.checkIfRegisterDataMatch(username, email, token);
+                if (dataMatch == true) {
+                    let addUserStatus = await Database.addUser(username, email, token);
+                    if (addUserStatus == true)
+                        easyStatusText(200, "User has been created");
+                    else
+                        easyStatusText(res, 400, 'Database error.');
+                }
+            }
+        });
+    }
+}
 //routes
 app.post('/api/register', (req, res) => {
     ApiRegister(req, res);
+});
+app.post('/api/validate-account', (req, res) => {
+    ApiValidateAccount(req, res);
 });
 app.post('/api/change-password', (req, res) => {
     ApiChangePassword(req, res);

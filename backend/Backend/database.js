@@ -63,7 +63,7 @@ async function query_checkIfUserExistsById(userId) {
             let mysql_query = 'SELECT COUNT(*) as accountNumber FROM `users` WHERE `id` =' + pool.escape(userId);
             const rows = await conn.query(mysql_query);
             conn.end();
-            var results = Object.assign({}, rows[0]);
+            let results = Object.assign({}, rows[0]);
             if (results["accountNumber"] == 1) return resolve(true);
             return resolve(false);
         });
@@ -73,19 +73,44 @@ async function query_checkIfUserExistsById(userId) {
         if (conn) return conn.end();
     }
 }
-async function query_addUser(username, email, password) {
+async function query_addUser(username, email, token) {
     let conn;
     try {
         return new Promise(async (resolve, reject) => {
             conn = await pool.getConnection();
-            let mysql_query = 'INSERT INTO `users`(`username`, `email`, `password`) VALUES (' + pool.escape(username) + ',' + pool.escape(email) + ',' + pool.escape(password) + ')';
+            let mysql_query = 'SELECT `password`  FROM `register` WHERE `token` =' + pool.escape(token);
             let rows = await conn.query(mysql_query);
+            let results = Object.assign({}, rows[0]);
+            let password = results["accountNumber"];
+
+            mysql_query = 'DELETE * FROM `register` WHERE `token` = ' + pool.escape(token);
+            await conn.query(mysql_query);
+
+            mysql_query = 'INSERT INTO `users`(`username`, `email`, `password`) VALUES (' + pool.escape(username) + ',' + pool.escape(email) + ',' + pool.escape(password) + ')';
+            rows = await conn.query(mysql_query);
             mysql_query = 'SELECT `id` FROM `users` WHERE username = ' + pool.escape(username);
             rows = await conn.query(mysql_query);
-            var results = Object.assign({}, rows[0]);
+            results = Object.assign({}, rows[0]);
             var sqlId = results["id"];
             mysql_query = 'INSERT INTO `watch_list`(`user_id`) VALUES (' + pool.escape(sqlId) + ')';
             rows = await conn.query(mysql_query);
+            conn.end();
+            return resolve(true);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_addRegister(username, email, password, token, timestamp) {
+    await query_removeExpiredRegisterTokens();
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'INSERT INTO `register`(`username`, `email`, `password`, `token`, `timestamp`) VALUES (' + pool.escape(username) + ',' + pool.escape(email) + ',' + pool.escape(password) + ',' + pool.escape(token) + ',' + pool.escape(timestamp) + ')';
+            await conn.query(mysql_query);
             conn.end();
             return resolve(true);
         });
@@ -443,7 +468,7 @@ async function query_checkIfFPTokenIsValid(userId, forgotPasswordToken) {
             let mysql_query = 'SELECT COUNT(*) as countEmited FROM `forgot_password` WHERE `user_id` =' + pool.escape(userId) + ' AND `token` = ' + pool.escape(forgotPasswordToken);
             const rows = await conn.query(mysql_query);
             conn.end();
-            var result = Object.assign({}, rows[0]);
+            let result = Object.assign({}, rows[0]);
             if (result["countEmited"] >= 1) return resolve(true);
             return resolve(false);
         });
@@ -486,6 +511,82 @@ async function query_removeExpiredRegisterTokens() {
         if (conn) return conn.end();
     }
 }
+async function query_checkIfRegisterTokenExists(token) {
+    await query_removeExpiredRegisterTokens();
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'SELECT COUNT(*) as countTokens FROM `register` WHERE `token` =' + pool.escape(token);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            let result = Object.assign({}, rows[0]);
+            if (result["countTokens"] >= 1) return resolve(true);
+            return resolve(false);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_checkIfRegisterEmailExists(email) {
+    await query_removeExpiredRegisterTokens();
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'SELECT COUNT(*) as countRows FROM `register` WHERE `email` =' + pool.escape(email);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            let result = Object.assign({}, rows[0]);
+            if (result["countRows"] >= 1) return resolve(true);
+            return resolve(false);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_checkIfRegisterUsernameExists(username) {
+    await query_removeExpiredRegisterTokens();
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'SELECT COUNT(*) as countRows FROM `register` WHERE `username` =' + pool.escape(username);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            let result = Object.assign({}, rows[0]);
+            if (result["countRows"] >= 1) return resolve(true);
+            return resolve(false);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+async function query_checkIfRegisterDataMatch(username, email, token) {
+    await query_removeExpiredRegisterTokens();
+    let conn;
+    try {
+        return new Promise(async (resolve, reject) => {
+            conn = await pool.getConnection();
+            let mysql_query = 'SELECT `username`, `email` FROM `register` WHERE `token` =' + pool.escape(token);
+            const rows = await conn.query(mysql_query);
+            conn.end();
+            let result = Object.assign({}, rows[0]);
+            if (result["username"] == username && result["email"] == email) return resolve(true);
+            return resolve(false);
+        });
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.end();
+    }
+}
 module.exports.checkIfUserExistsByUsername = query_checkIfUserExistsByUsername;
 module.exports.checkIfUserExistsByEmail = query_checkIfUserExistsByEmail;
 module.exports.checkIfUserExistsById = query_checkIfUserExistsById;
@@ -510,3 +611,8 @@ module.exports.checkIfEmailAlreadyEmited = query_checkIfEmailAlreadyEmited;
 module.exports.checkIfFPTokenIsValid = query_checkIfFPTokenIsValid;
 module.exports.removeFPToken = query_removeFPToken;
 module.exports.removeExpiredRegisterTokens = query_removeExpiredRegisterTokens;
+module.exports.checkIfRegisterTokenExists = query_checkIfRegisterTokenExists;
+module.exports.checkIfRegisterEmailExists = query_checkIfRegisterEmailExists;
+module.exports.checkIfRegisterUsernameExists = query_checkIfRegisterUsernameExists;
+module.exports.addRegister = query_addRegister;
+module.exports.checkIfRegisterDataMatch = query_checkIfRegisterDataMatch;
