@@ -263,4 +263,21 @@ class UserFunctions {
       debugPrint(e.toString());
     }
   }
+
+  static Future<void> validateAccount(String token) async {
+    try {
+      var validateApi =
+          Uri.parse("https://watchthecrypto.com:5052/api/validate-account");
+
+      await http.post(
+        validateApi,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'token': token,
+        }),
+      );
+    } catch (e) {}
+  }
 }

@@ -1,6 +1,8 @@
+import 'package:beta_wtc_bloc/network/user_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:beta_wtc_bloc/presentation/screens/home_screen.dart';
 import 'package:beta_wtc_bloc/presentation/screens/forgot_password_screen.dart';
+
 
 class AppRouter {
   static final GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -9,7 +11,11 @@ class AppRouter {
     final settingsUri = Uri.parse(settings.name.toString());
     final param_token = settingsUri.queryParameters['id'].toString();
     final path = settingsUri.path;
-    print(path);
+    if(path.toString() == '/validate-account')
+    {
+      //apelam functia de validare
+      UserFunctions.validateAccount(param_token);
+    }
     switch (path.toString()) {
       case '/':
         return MaterialPageRoute(builder: (_) => HomeScreen(scaffoldKey: _key));
