@@ -81,9 +81,9 @@ async function query_addUser(username, email, token) {
             let mysql_query = 'SELECT `password`  FROM `register` WHERE `token` =' + pool.escape(token);
             let rows = await conn.query(mysql_query);
             let results = Object.assign({}, rows[0]);
-            let password = results["accountNumber"];
-
-            mysql_query = 'DELETE * FROM `register` WHERE `token` = ' + pool.escape(token);
+            let password = results["password"];
+            console.log(password);
+            mysql_query = 'DELETE FROM `register` WHERE `token` = ' + pool.escape(token);
             await conn.query(mysql_query);
 
             mysql_query = 'INSERT INTO `users`(`username`, `email`, `password`) VALUES (' + pool.escape(username) + ',' + pool.escape(email) + ',' + pool.escape(password) + ')';

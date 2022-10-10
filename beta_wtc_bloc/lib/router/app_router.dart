@@ -10,11 +10,12 @@ class AppRouter {
   Route onGenerateRoute(RouteSettings settings) {
     final settingsUri = Uri.parse(settings.name.toString());
     final param_token = settingsUri.queryParameters['id'].toString();
-    final path = settingsUri.path;
+    String path = settingsUri.path;
     if(path.toString() == '/validate-account')
     {
       //apelam functia de validare
       UserFunctions.validateAccount(param_token);
+      path = '/';
     }
     switch (path.toString()) {
       case '/':

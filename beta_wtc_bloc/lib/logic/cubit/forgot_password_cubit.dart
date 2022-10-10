@@ -12,7 +12,6 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   ForgotPasswordCubit() : super(ForgotPasswordCantSubmit());
   void setParamToken(String newParamToken) {
     paramToken = newParamToken;
-    debugPrint("aasd");
     emit(ForgotPasswordCanSubmit());
   }
 

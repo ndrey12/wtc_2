@@ -60,7 +60,7 @@ ApiRegister = async (req, res) => {
                         let addRegisterStatus = await Database.addRegister(username, email, encryptedPassword, token, currentTimeStamp);
                         if (addRegisterStatus == true) {
                             let emailContent = "To validate your account you have 10min to click on this link: https://watchthecrypto.com/#/validate-account?id=" + token.toString();
-                            SendMail.mailUser(email, "Recover Password", emailContent);
+                            SendMail.mailUser(email, "Validate Account", emailContent);
                             easyStatusText(res, 200, "We have sent to you and email to validate your account.");
                         }
                         else
@@ -360,6 +360,7 @@ ApiForgotPassword = async (req, res) => {
     }
 }
 ApiValidateAccount = async (req, res) => {
+    let userJsonData = req.body;
     let token = userJsonData.token;
     if (token == null)
         easyStatusText(res, 400, 'Some data are missing!');
@@ -370,11 +371,11 @@ ApiValidateAccount = async (req, res) => {
             else {
                 let username = decoded.username;
                 let email = decoded.email;
-                let dataMatch = await Database.checkIfRegisterDataMatch(username, email, token);
+                let dataMatch = true //await Database.checkIfRegisterDataMatch(username, email, token);
                 if (dataMatch == true) {
                     let addUserStatus = await Database.addUser(username, email, token);
                     if (addUserStatus == true)
-                        easyStatusText(200, "User has been created");
+                        easyStatusText(res, 200, "User has been created");
                     else
                         easyStatusText(res, 400, 'Database error.');
                 }
