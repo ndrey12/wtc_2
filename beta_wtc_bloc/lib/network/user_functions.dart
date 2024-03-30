@@ -19,8 +19,7 @@ class UserFunctions {
     var bytes = utf8.encode(saltedPassword);
     var encryptedPassword = sha256.convert(bytes);
     try {
-      var registerApi =
-          Uri.parse("https://watchthecrypto.com:5052/api/register");
+      var registerApi = Uri.parse("http://127.0.0.1:5052/api/register");
       var response = await http.post(
         registerApi,
         headers: <String, String>{
@@ -51,7 +50,7 @@ class UserFunctions {
     var encryptedPassword = sha256.convert(bytes);
     UserData userData = UserData(username: "n/a", email: "n/a", token: "n/a");
     try {
-      var loginApi = Uri.parse("https://watchthecrypto.com:5052/api/login");
+      var loginApi = Uri.parse("http://127.0.0.1:5052/api/login");
       var response = await http.post(
         loginApi,
         headers: <String, String>{
@@ -87,8 +86,7 @@ class UserFunctions {
 
   static Future<UserCoinsStatus> getCoinsForUser(String token) async {
     try {
-      var loginApi =
-          Uri.parse("https://watchthecrypto.com:5052/api/get-coins-for-user");
+      var loginApi = Uri.parse("http://127.0.0.1:5052/api/get-coins-for-user");
       var response = await http.post(
         loginApi,
         headers: <String, String>{
@@ -120,8 +118,8 @@ class UserFunctions {
   static Future<void> updateCoinsForUser(
       String token, List<String> coinNames) async {
     try {
-      var loginApi = Uri.parse(
-          "https://watchthecrypto.com:5052/api/update-coins-for-user");
+      var loginApi =
+          Uri.parse("http://127.0.0.1:5052/api/update-coins-for-user");
       String stringCoinNames = "";
       for (int i = 0; i < coinNames.length - 1; i++) {
         stringCoinNames = '$stringCoinNames${coinNames[i]},';
@@ -155,8 +153,7 @@ class UserFunctions {
     var encryptedNewPassword = sha256.convert(bytes);
 
     try {
-      var getCoinsApi =
-          Uri.parse("https://watchthecrypto.com:5052/api/change-password");
+      var getCoinsApi = Uri.parse("http://127.0.0.1:5052/api/change-password");
       var response = await http.post(
         getCoinsApi,
         headers: <String, String>{
@@ -188,8 +185,7 @@ class UserFunctions {
     var bytes = utf8.encode(saltedPassword);
     var encryptedPassword = sha256.convert(bytes);
     try {
-      var getCoinsApi =
-          Uri.parse("https://watchthecrypto.com:5052/api/change-email");
+      var getCoinsApi = Uri.parse("http://127.0.0.1:5052/api/change-email");
       var response = await http.post(
         getCoinsApi,
         headers: <String, String>{
@@ -222,8 +218,7 @@ class UserFunctions {
     var encryptedNewPassword = sha256.convert(bytes);
 
     try {
-      var getCoinsApi =
-          Uri.parse("https://watchthecrypto.com:5052/api/forgot-password");
+      var getCoinsApi = Uri.parse("http://127.0.0.1:5052/api/forgot-password");
       var response = await http.post(
         getCoinsApi,
         headers: <String, String>{
@@ -248,8 +243,8 @@ class UserFunctions {
 
   static Future<void> sendForgotPasswordMail(String email) async {
     try {
-      var getCoinsApi = Uri.parse(
-          "https://watchthecrypto.com:5052/api/emit-forgot-password-mail");
+      var getCoinsApi =
+          Uri.parse("http://127.0.0.1:5052/api/emit-forgot-password-mail");
       await http.post(
         getCoinsApi,
         headers: <String, String>{
@@ -266,8 +261,7 @@ class UserFunctions {
 
   static Future<void> validateAccount(String token) async {
     try {
-      var validateApi =
-          Uri.parse("https://watchthecrypto.com:5052/api/validate-account");
+      var validateApi = Uri.parse("http://127.0.0.1:5052/api/validate-account");
 
       await http.post(
         validateApi,

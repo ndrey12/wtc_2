@@ -4,7 +4,7 @@ import 'package:beta_wtc_bloc/logic/cubit/watcher_list_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AppBarWatcher extends StatelessWidget with PreferredSizeWidget {
+class AppBarWatcher extends StatelessWidget implements PreferredSizeWidget {
   final String coinName;
   final int coinId;
   const AppBarWatcher({Key? key, required this.coinName, required this.coinId})

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class SearchBar extends StatefulWidget {
+class SearchBarWidget extends StatefulWidget {
   final Function onChanged;
-  const SearchBar({Key? key, required this.onChanged}) : super(key: key);
+  const SearchBarWidget({Key? key, required this.onChanged}) : super(key: key);
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<SearchBarWidget> createState() => _SearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _SearchBarState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Material(

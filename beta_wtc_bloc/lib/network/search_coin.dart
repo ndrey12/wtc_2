@@ -7,8 +7,7 @@ class SearchCoin {
   static Future<List<String>> getCoinsName() async {
     try {
       List<String> result = [];
-      var getCoinsApi =
-          Uri.parse("https://watchthecrypto.com:5052/api/get-all-coins");
+      var getCoinsApi = Uri.parse("http://127.0.0.1:5052/api/get-all-coins");
       var response = await http.get(getCoinsApi);
       if (response.statusCode == 200) {
         List<dynamic> jsonData = jsonDecode(response.body);

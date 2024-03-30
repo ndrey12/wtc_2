@@ -11,14 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  flutter_bloc: ^8.0.0
-  http: ^0.13.4
-  auto_size_text: ^3.0.0
-  flutter_screenutil: ^5.5.3
-  crypto: ^3.0.2
-  convert: ^3.0.2
-  flutter_native_splash: ^2.2.7
+  cupertino_icons: 1.0.2
+  flutter_bloc: 8.0.0
+  http: 0.13.4
+  auto_size_text: 3.0.0
+  flutter_screenutil:  ^5.9.0
+  crypto: 3.0.2
+  convert: 3.0.2
+  flutter_native_splash: 2.2.7
 
 dev_dependencies:
   flutter_test:

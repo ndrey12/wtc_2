@@ -1,34 +1,34 @@
 {
     "name": "@types/geojson",
-    "version": "7946.0.10",
+    "version": "7946.0.14",
     "description": "TypeScript definitions for geojson",
     "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/geojson",
     "license": "MIT",
     "contributors": [
         {
             "name": "Jacob Bruun",
-            "url": "https://github.com/cobster",
-            "githubUsername": "cobster"
+            "githubUsername": "cobster",
+            "url": "https://github.com/cobster"
         },
         {
             "name": "Arne Schubert",
-            "url": "https://github.com/atd-schubert",
-            "githubUsername": "atd-schubert"
+            "githubUsername": "atd-schubert",
+            "url": "https://github.com/atd-schubert"
         },
         {
             "name": "Jeff Jacobson",
-            "url": "https://github.com/JeffJacobson",
-            "githubUsername": "JeffJacobson"
+            "githubUsername": "JeffJacobson",
+            "url": "https://github.com/JeffJacobson"
         },
         {
             "name": "Ilia Choly",
-            "url": "https://github.com/icholy",
-            "githubUsername": "icholy"
+            "githubUsername": "icholy",
+            "url": "https://github.com/icholy"
         },
         {
             "name": "Dan Vanderkam",
-            "url": "https://github.com/danvk",
-            "githubUsername": "danvk"
+            "githubUsername": "danvk",
+            "url": "https://github.com/danvk"
         }
     ],
     "main": "",
@@ -40,6 +40,6 @@
     },
     "scripts": {},
     "dependencies": {},
-    "typesPublisherContentHash": "c643a23a31eff03411bea631b681ed8d12f45c146cc63d329774f19aa6f904bc",
-    "typeScriptVersion": "4.0"
+    "typesPublisherContentHash": "e753c16ee536e3e65aed04b36ad138bb5843a33ca9d9aae93a326e81b9513a9c",
+    "typeScriptVersion": "4.6"
 }

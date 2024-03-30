@@ -227,7 +227,7 @@ async function query_getAllCoins() {
             conn.end();
             var normalObj = Object.assign({}, rows);
             var coins_list = [];
-            for (var i = 0; i < Object.keys(normalObj).length - 1; i++) {
+            for (var i = 0; i < Object.keys(normalObj).length ; i++) {
                 coins_list.push(normalObj[i]);
             }
             return resolve(coins_list);

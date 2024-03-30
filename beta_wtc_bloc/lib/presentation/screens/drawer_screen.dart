@@ -35,7 +35,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   },
                 ),
               ),
-              SearchBar(
+              SearchBarWidget(
                 onChanged: (String query) {
                   BlocProvider.of<CoinSearchCubit>(context).search(query);
                 },

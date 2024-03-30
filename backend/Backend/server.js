@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const cors = require('cors');
 const express = require('express');
 const { async } = require('q');
-const https = require('https');
+const https = require('http');
 const fs = require('fs');
 const options = {
     key: fs.readFileSync('key.pem', 'utf8'),
@@ -34,22 +34,28 @@ ApiRegister = async (req, res) => {
     let username = userJsonData.username;
     let password = userJsonData.password;
     let email = userJsonData.email;
+    console.log(username + " " + password + " " + email);
     if (username == null || password == null || email == null)
         easyStatusText(res, 400, 'Some data are missing! (username/password/email).');
     else {
+        console.log("miau");
         let usernameExists = await Database.checkIfUserExistsByUsername(username);
         if (usernameExists == true)
             easyStatusText(res, 409, 'A user with this username already exists.');
         else {
+            console.log("miau");
             let emailExists = await Database.checkIfUserExistsByEmail(email);
             if (emailExists == true)
                 easyStatusText(res, 409, 'A user with this email already exists.');
             else {
+                console.log("miau");
                 ///verificam daca exista deja un mail trimis
                 let registerWaitingValidate_username = await Database.checkIfRegisterUsernameExists(username);
                 if (registerWaitingValidate_username == true)
+                
                     easyStatusText(res, 409, 'A user with this username is already reserved. Try again in 10 minutes.');
                 else {
+                    console.log("miau");
                     let registerWaitingValidate_email = await Database.checkIfRegisterEmailExists(email);
                     if (registerWaitingValidate_email == true)
                         easyStatusText(res, 409, 'A user with this email is already reserved. Try again in 10 minutes.');
@@ -57,9 +63,12 @@ ApiRegister = async (req, res) => {
                         let encryptedPassword = bcrypt.hashSync(password, 10);
                         const token = jwt.sign({ username: username, email: email }, Secrets.jwt_secret);
                         let currentTimeStamp = Math.floor(Date.now() / 1000);
+                        console.log("miau");
                         let addRegisterStatus = await Database.addRegister(username, email, encryptedPassword, token, currentTimeStamp);
+                        console.log("miau");
                         if (addRegisterStatus == true) {
                             let emailContent = "To validate your account you have 10min to click on this link: https://watchthecrypto.com/#/validate-account?id=" + token.toString();
+                            console.log(emailContent);
                             SendMail.mailUser(email, "Validate Account", emailContent);
                             easyStatusText(res, 200, "We have sent to you and email to validate your account.");
                         }
